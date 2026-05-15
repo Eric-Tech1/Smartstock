@@ -10,8 +10,12 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ReportController;
 
+// Intercept the root path and route to login or dashboard safely
 Route::get('/', function () {
-    return view('welcome');
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
+    return redirect()->route('login');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -21,6 +25,7 @@ Route::middleware(['auth'])->group(function () {
             return redirect()->route('admin.dashboard');
         }
         
+        // This is where your Inertia React view is rendered for standard users
         return view('dashboard');
     })->name('dashboard');
 
@@ -29,7 +34,6 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.dashboard');
     });
 
-    
     Route::resource('products', ProductController::class);
     Route::resource('sales', SaleController::class);
 
