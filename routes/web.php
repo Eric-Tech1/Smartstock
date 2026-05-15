@@ -10,22 +10,19 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ReportController;
 
-// Intercept the root path and route to login or dashboard safely
+// 1. Return the welcome page first when visiting the root URL
 Route::get('/', function () {
-    if (Auth::check()) {
-        return redirect()->route('dashboard');
-    }
-    return redirect()->route('login');
+    return view('welcome');
 });
 
 Route::middleware(['auth'])->group(function () {
 
+    // 2. This handles routing to your 2 different dashboards based on role
     Route::get('/dashboard', function () {
         if (Auth::user()->role === 'admin') {
             return redirect()->route('admin.dashboard');
         }
         
-        // This is where your Inertia React view is rendered for standard users
         return view('dashboard');
     })->name('dashboard');
 
