@@ -10,6 +10,16 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\ReportController;
 
+// Temporary block to force cache clearing on boot
+use Illuminate\Support\Facades\Artisan;
+Route::get('/clear-cache', function() {
+    Artisan::call('config:clear');
+    Artisan::call('route:clear');
+    Artisan::call('view:clear');
+    Artisan::call('cache:clear');
+    return "Application cache cleared successfully!";
+});
+
 // 1. Return the welcome page first when visiting the root URL
 Route::get('/', function () {
     return view('welcome');
